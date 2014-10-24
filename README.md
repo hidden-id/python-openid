@@ -6,6 +6,8 @@ Requires running a tor proxy on the consumer's `127.0.0.1:9050`.
 **Note:** [pycurl](https://pypi.python.org/pypi/pycurl/) is now a requirement and
 not an option.
 
+See [wiki](https://github.com/hidden-id/python-openid/wiki) for some more tips.
+
 ----
 ### Original python-openid README
 

@@ -39,9 +39,9 @@ def is_onion(url):
     return RE_ONION.search(url)
 
 ## For production
-TOR_PROXY = 'http://127.0.0.1:9050/'
+#TOR_PROXY = 'http://127.0.0.1:9050/'
 ## For weird dev cases when consumer's running behind a tor browser
-#TOR_PROXY = 'http://127.0.0.1:9150/'
+TOR_PROXY = 'http://127.0.0.1:9150/'
 
 def fetch(url, body=None, headers=None):
     """Invoke the fetch method on the default fetcher. Most users
