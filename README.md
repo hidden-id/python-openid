@@ -1,3 +1,14 @@
+### HiddenID-specific modification
+
+Consumers can authenticate with `.onion` OpenID urls (i.e. HiddenID).
+Requires running a tor proxy on the consumer's `127.0.0.1:9050`.
+
+**Note:** [pycurl](https://pypi.python.org/pypi/pycurl/) is now a requirement and
+not an option.
+
+----
+### Original python-openid README
+
 This is the Python OpenID library.
 
 [![Build Status][travis-image]][travis-link]
@@ -9,6 +20,8 @@ This is the Python OpenID library.
 REQUIREMENTS
 ============
 
+Original (not so relevant for modern python):
+
  - Python 2.3, 2.4, or 2.5.
 
  - ElementTree.  This is included in the Python 2.5 standard library,
@@ -17,6 +30,10 @@ REQUIREMENTS
 
  - pycrypto, if on Python 2.3 and without /dev/urandom, or on Python
    2.3 or 2.4 and you want SHA256.
+
+For HiddenID:
+
+ - [pycurl](https://pypi.python.org/pypi/pycurl/) (needed for http proxy)
 
 
 INSTALLATION

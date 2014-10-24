@@ -11,6 +11,7 @@ import urllib2
 import time
 import cStringIO
 import sys
+import re
 
 import openid
 import openid.urinorm
@@ -32,13 +33,25 @@ except ImportError:
 USER_AGENT = "python-openid/%s (%s)" % (openid.__version__, sys.platform)
 MAX_RESPONSE_KB = 1024
 
+# HiddenID: determine whether url is .onion
+RE_ONION = re.compile('^https?://[a-z0-9]{16}.onion(/|$)',re.I)
+def is_onion(url):
+    return RE_ONION.search(url)
+
+## For production
+TOR_PROXY = 'http://127.0.0.1:9050/'
+## For weird dev cases when consumer's running behind a tor browser
+#TOR_PROXY = 'http://127.0.0.1:9150/'
+
 def fetch(url, body=None, headers=None):
     """Invoke the fetch method on the default fetcher. Most users
     should need only this method.
 
     @raises Exception: any exceptions that may be raised by the default fetcher
     """
-    fetcher = getDefaultFetcher()
+    ## HiddenId: Take no prisoners. Httlib2 sucks at proxies
+    # fetcher = getDefaultFetcher()
+    fetcher = CurlHTTPFetcher() 
     return fetcher.fetch(url, body, headers)
 
 def createHTTPFetcher():
@@ -327,7 +340,11 @@ class CurlHTTPFetcher(HTTPFetcher):
                 c.setopt(pycurl.WRITEFUNCTION, write_data)
                 c.setopt(pycurl.HEADERFUNCTION, response_header_data.write)
                 c.setopt(pycurl.TIMEOUT, off)
-                c.setopt(pycurl.URL, openid.urinorm.urinorm(url))
+                normurl = openid.urinorm.urinorm(url)
+                if is_onion(normurl):
+                    c.setopt(pycurl.PROXY, TOR_PROXY)
+                    c.setopt(pycurl.PROXYTYPE, 7) # why not pycurl.PROXYTYPE_SOCKS5?
+                c.setopt(pycurl.URL, normurl)
 
                 c.perform()
 
